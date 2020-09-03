@@ -3,6 +3,7 @@
 class Data
 {
     private $conn;
+    private $error;
 
     public function __construct($pdo)
     {
@@ -13,10 +14,19 @@ class Data
     {
         $filename = $this->UploadImage($_FILES['image']);
         try{
-            $statment = $this->conn->prepare("insert into ads(`text`, `price`, `amount`) values('{$param['text']}', '{$param['price']}', '{$param['amount']}')");
+            $statment = $this->conn->prepare("
+
+                INSERT INTO ads(`text`, `price`, `amount`) VALUES('{$param['text']}', '{$param['price']}', '{$param['amount']}')"
+            
+            );
+
             $statment->execute();
 
-            $stmt = $this->conn->prepare("insert into images(`image_name`, `ad_id`) values('{$filename}', LAST_INSERT_ID())");
+            $stmt = $this->conn->prepare("
+
+                INSERT INTO images(`image_name`, `ad_id`) VALUES('{$filename}', LAST_INSERT_ID())"
+            
+            );
             $stmt->execute();
         
         } catch(PDOException $e){
@@ -47,10 +57,11 @@ class Data
             $this->updateRequest($value);
             $arr = [
                 'text' => $value->text,
-                'image' => $_SERVER['HTTP_HOST'] . "/uploads/" . $value->image_name
+                'image' => $_SERVER['HTTP_HOST'] . "/uploads/" . $value->image_name,
+               
             ];   
         }
-        echo json_encode($arr); 
+        echo json_encode($arr);
     }
 
     private function updateRequest($value)
