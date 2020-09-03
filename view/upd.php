@@ -7,7 +7,9 @@
 </head>
 <body>
     
-    <form action="insert.php" enctype="multipart/form-data" method="POST">
+    <form action="update.php" enctype="multipart/form-data" method="POST">
+        <p>id :</p>
+        <input type="text" name="id" require>
         <p>text :</p>
         <input type="text" name="text" require>
         <p>price :</p>

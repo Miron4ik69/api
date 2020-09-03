@@ -24,6 +24,22 @@ class Data
         }
     }
 
+    public function update($param)
+    {
+        $filename = $this->UploadImage($_FILES['image']);
+        try{
+            $statment = $this->conn->prepare("
+            
+                UPDATE `ads`JOIN `images` SET ads.text = '{$param['text']}', ads.price = '{$param['price']}', ads.amount = '{$param['amount']}', images.image_name = '{$filename}' WHERE ads.id = {$param['id']} and images.ad_id = {$param['id']}
+            
+            ");
+            $statment->execute();
+        
+        } catch(PDOException $e){
+            echo $e->getMessage();
+        }
+    }
+
     public function api()
     {
         $getAD = $this->getAd();
@@ -32,10 +48,9 @@ class Data
             $arr = [
                 'text' => $value->text,
                 'image' => $_SERVER['HTTP_HOST'] . "/uploads/" . $value->image_name
-            ];
-            echo json_encode($arr); 
-            exit;
+            ];   
         }
+        echo json_encode($arr); 
     }
 
     private function updateRequest($value)
